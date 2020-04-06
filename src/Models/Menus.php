@@ -6,7 +6,7 @@ use Nksoft\Master\Models\NksoftModel;
 class Menus extends NksoftModel
 {
     protected $table = 'menus';
-    protected $fillable = ['id', 'name', 'parent_id', 'is_active', 'order_by', 'slug', 'url_to', 'meta_description'];
+    protected $fillable = ['id', 'name', 'parent_id', 'is_active', 'order_by', 'slug', 'url_to', 'type', 'position', 'meta_description'];
 
     /**
      * Get list category to product
@@ -14,8 +14,9 @@ class Menus extends NksoftModel
     public static function GetListMenu($where, $result)
     {
         $parentId = $result->parent_id ?? 0;
+        $id = $result->id ?? 0;
         $data = array();
-        $fs = self::where($where)->orderBy('order_by')->get();
+        $fs = self::where($where)->where('id', '<>', $id)->orderBy('order_by')->get();
         if ($fs) {
             foreach ($fs as $item) {
                 $selected = array(

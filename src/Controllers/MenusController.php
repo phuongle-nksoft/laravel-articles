@@ -14,7 +14,7 @@ use Nksoft\Products\Models\Categories;
 
 class MenusController extends WebController
 {
-    private $formData = ['id', 'name', 'parent_id', 'is_active', 'order_by', 'slug', 'url_to', 'meta_description'];
+    private $formData = ['id', 'name', 'parent_id', 'is_active', 'order_by', 'slug', 'url_to', 'position', 'type', 'meta_description'];
 
     protected $module = 'menus';
     /**
@@ -79,7 +79,7 @@ class MenusController extends WebController
                     'opened' => true,
                     'selected' => $result && $result->parent_id == 0,
                 ],
-                'children' => ArticleCategories::GetListWithParent(array('parent_id' => 0), $result, 'article-categories'),
+                'children' => ArticleCategories::GetListWithParentByMenu(array('parent_id' => 0), $result, 'article-categories'),
             ],
             [
                 'text' => trans('nksoft::common.pages'),
@@ -101,7 +101,7 @@ class MenusController extends WebController
                     'opened' => true,
                     'selected' => $result && $result->parent_id == 0,
                 ],
-                'children' => Categories::GetListWithParent(array('parent_id' => 0), $result, 'categories'),
+                'children' => Categories::GetListWithParentByMenu(array('parent_id' => 0), $result, 'categories'),
             ],
             [
                 'text' => trans('nksoft::common.brands'),
@@ -152,6 +152,7 @@ class MenusController extends WebController
                 'label' => trans('nksoft::common.Content'),
                 'element' => [
                     ['key' => 'parent_id', 'label' => trans('nksoft::common.root'), 'data' => $parent, 'type' => 'tree'],
+                    ['key' => 'position', 'label' => trans('nksoft::common.Position.Title'), 'data' => $this->position(), 'type' => 'select'],
                     ['key' => 'is_active', 'label' => trans('nksoft::common.Status'), 'data' => $this->status(), 'type' => 'select'],
                     ['key' => 'name', 'label' => trans('nksoft::common.Name'), 'data' => null, 'class' => 'required', 'type' => 'text'],
                     ['key' => 'order_by', 'label' => trans('nksoft::common.Order By'), 'data' => null, 'type' => 'number'],
@@ -160,11 +161,19 @@ class MenusController extends WebController
             ],
         ];
     }
-
+    public function position()
+    {
+        $status = [];
+        foreach (config('nksoft.position') as $v => $k) {
+            $status[] = ['id' => $k['id'], 'name' => trans('nksoft::common.Position.' . $k['name'])];
+        }
+        return $status;
+    }
     private function rules()
     {
         $rules = [
             'name' => 'required',
+            'url_to' => 'required',
             'images[]' => 'image',
         ];
 
@@ -175,6 +184,7 @@ class MenusController extends WebController
     {
         return [
             'name.required' => __('nksoft::message.Field is require!', ['Field' => trans('nksoft::common.Name')]),
+            'url_to.required' => __('nksoft::message.Field is require!', ['Field' => trans('nksoft::common.Url To')]),
         ];
     }
     /**
@@ -187,7 +197,7 @@ class MenusController extends WebController
     {
         $validator = Validator($request->all(), $this->rules(), $this->message());
         if ($validator->fails()) {
-            return \response()->json(['status' => 'error', 'message' => $validator->customMessages]);
+            return \response()->json(['status' => 'error', 'message' => $validator->errors()]);
         }
         try {
             $data = [];
@@ -199,7 +209,7 @@ class MenusController extends WebController
             if (!$data['slug']) {
                 $data['slug'] = $data['name'];
             }
-
+            if(!$data['parent_id']) $data['parent_id'] = 0;
             $data['slug'] = Str::slug($data['slug'] . rand(100, strtotime('now')));
             $result = CurrentModel::create($data);
             if ($request->hasFile('images')) {

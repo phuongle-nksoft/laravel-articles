@@ -139,7 +139,7 @@ class ArticleCategoriesController extends WebController
     {
         $validator = Validator($request->all(), $this->rules(), $this->message());
         if ($validator->fails()) {
-            return \response()->json(['status' => 'error', 'message' => $validator->customMessages]);
+            return \response()->json(['status' => 'error', 'message' => $validator->errors()]);
         }
         try {
             $data = [];
