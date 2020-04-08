@@ -4,7 +4,6 @@ namespace Nksoft\Articles\Controllers;
 
 use Arr;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Nksoft\Articles\Models\ArticleCategories as CurrentModel;
 use Nksoft\Master\Controllers\WebController;
 
@@ -13,6 +12,8 @@ class ArticleCategoriesController extends WebController
     private $formData = ['id', 'name', 'parent_id', 'is_active', 'order_by', 'slug', 'description', 'page_template', 'meta_description'];
 
     protected $module = 'article-categories';
+
+    protected $model = CurrentModel::class;
     /**
      * Display a listing of the resource.
      *
@@ -106,7 +107,6 @@ class ArticleCategoriesController extends WebController
                     ['key' => 'description', 'label' => trans('nksoft::common.Description'), 'data' => null, 'type' => 'editor'],
                     ['key' => 'order_by', 'label' => trans('nksoft::common.Order By'), 'data' => null, 'type' => 'number'],
                     ['key' => 'slug', 'label' => trans('nksoft::common.Slug'), 'data' => null, 'type' => 'text'],
-                    ['key' => 'banner', 'label' => trans('nksoft::common.Banner'), 'data' => null, 'type' => 'image'],
                     ['key' => 'images', 'label' => trans('nksoft::common.Images'), 'data' => null, 'type' => 'image'],
                 ],
             ],
@@ -160,7 +160,7 @@ class ArticleCategoriesController extends WebController
             }
             if ($request->hasFile('banner')) {
                 $images = $request->file('banner');
-                $this->setMedia($images, $result->id, $this->module, true);
+                $this->setMedia($images, $result->id, $this->module, 2);
             }
             $response = [
                 'result' => $result,
@@ -244,7 +244,7 @@ class ArticleCategoriesController extends WebController
             }
             if ($request->hasFile('banner')) {
                 $images = $request->file('banner');
-                $this->setMedia($images, $result->id, $this->module, true);
+                $this->setMedia($images, $result->id, $this->module, 2);
             }
             $response = [
                 'result' => $result,
@@ -255,24 +255,4 @@ class ArticleCategoriesController extends WebController
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        try {
-            if (\Auth::user()->role_id == 1) {
-                CurrentModel::find($id)->delete();
-                $this->destroyHistories($id, $this->module);
-            } else {
-                $this->setHistories($id, $this->module);
-            }
-            return $this->responseSuccess();
-        } catch (\Exception $e) {
-            return $this->responseError($e);
-        }
-    }
 }

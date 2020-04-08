@@ -4,7 +4,6 @@ namespace Nksoft\Articles\Controllers;
 
 use Arr;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Nksoft\Articles\Models\ArticleCategories;
 use Nksoft\Articles\Models\Articles as CurrentModel;
 use Nksoft\Master\Controllers\WebController;
@@ -14,6 +13,7 @@ class ArticlesController extends WebController
     private $formData = ['id', 'name', 'categories_id', 'is_active', 'order_by', 'slug', 'short_content', 'description', 'meta_description'];
 
     protected $module = 'articles';
+    protected $model = CurrentModel::class;
     /**
      * Display a listing of the resource.
      *
@@ -233,24 +233,4 @@ class ArticlesController extends WebController
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        try {
-            if (\Auth::user()->role_id == 1) {
-                CurrentModel::find($id)->delete();
-                $this->destroyHistories($id, $this->module);
-            } else {
-                $this->setHistories($id, $this->module);
-            }
-            return $this->responseSuccess();
-        } catch (\Exception $e) {
-            return $this->responseError($e);
-        }
-    }
 }

@@ -4,7 +4,6 @@ namespace Nksoft\Articles\Controllers;
 
 use Arr;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Nksoft\Articles\Models\ArticleCategories;
 use Nksoft\Articles\Models\Menus as CurrentModel;
 use Nksoft\Articles\Models\Pages;
@@ -19,6 +18,8 @@ class MenusController extends WebController
     private $formData = ['id', 'name', 'parent_id', 'is_active', 'order_by', 'slug', 'url_to', 'position', 'type', 'meta_description'];
 
     protected $module = 'menus';
+
+    protected $model = CurrentModel::class;
     /**
      * Display a listing of the resource.
      *
@@ -33,13 +34,14 @@ class MenusController extends WebController
                 ['key' => 'is_active', 'label' => trans('nksoft::common.Status'), 'data' => $this->status()],
             ];
             $select = Arr::pluck($columns, 'key');
-            $results = CurrentModel::select($select)->with(['histories'])->paginate();
+            $results = CurrentModel::GetListMenu(['parent_id' => 0], null);
             $listDelete = $this->getHistories($this->module)->pluck('parent_id');
             $response = [
                 'rows' => $results,
                 'columns' => $columns,
                 'module' => $this->module,
-                'listDelete' => CurrentModel::whereIn('id', $listDelete)->get(),
+                'listDelete' => $listDelete && count($listDelete) > 0 ? CurrentModel::GetListMenu(['parent_id' => 0], null, $listDelete) : null,
+                'layout' => 'menus',
             ];
             return $this->responseSuccess($response);
         } catch (\Execption $e) {
@@ -69,7 +71,8 @@ class MenusController extends WebController
         }
     }
 
-    private function getPosition($result) {
+    private function getPosition($result)
+    {
         $idSelected = $result ? json_decode($result->position) : [];
         $data = array();
         foreach ($this->position() as $item) {
@@ -240,7 +243,10 @@ class MenusController extends WebController
                 }
             }
             $data['slug'] = $this->getSlug($data);
-            if(!$data['parent_id']) $data['parent_id'] = 0;
+            if (!$data['parent_id']) {
+                $data['parent_id'] = 0;
+            }
+
             $result = CurrentModel::create($data);
             if ($request->hasFile('images')) {
                 $images = $request->file('images');
@@ -335,27 +341,6 @@ class MenusController extends WebController
                 'result' => $result,
             ];
             return $this->responseSuccess($response);
-        } catch (\Exception $e) {
-            return $this->responseError($e);
-        }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        try {
-            if (\Auth::user()->role_id == 1) {
-                CurrentModel::find($id)->delete();
-                $this->destroyHistories($id, $this->module);
-            } else {
-                $this->setHistories($id, $this->module);
-            }
-            return $this->responseSuccess();
         } catch (\Exception $e) {
             return $this->responseError($e);
         }

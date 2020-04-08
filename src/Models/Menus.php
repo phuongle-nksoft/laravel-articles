@@ -11,12 +11,16 @@ class Menus extends NksoftModel
     /**
      * Get list category to product
      */
-    public static function GetListMenu($where, $result)
+    public static function GetListMenu($where, $result, $listDelete = [])
     {
         $parentId = $result->parent_id ?? 0;
         $id = $result->id ?? 0;
         $data = array();
-        $fs = self::where($where)->where('id', '<>', $id)->orderBy('order_by')->get();
+        if ($listDelete && count($listDelete) > 0) {
+            $fs = self::whereIn('id', $listDelete)->get();
+        } else {
+            $fs = self::where($where)->where('id', '<>', $id)->with(['histories'])->orderBy('order_by')->get();
+        }
         if ($fs) {
             foreach ($fs as $item) {
                 $selected = array(
@@ -30,6 +34,7 @@ class Menus extends NksoftModel
                     'state' => $selected,
                     'children' => self::GetListMenu(['parent_id' => $item->id], $result),
                     'slug' => $item->slug,
+                    'histories' => $item->histories,
                 );
             }
         }
