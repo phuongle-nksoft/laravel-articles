@@ -1,10 +1,11 @@
 <?php
 return [
     'pageTemplate' => [
-        ['id' => '2columns', 'name' => '2 Columns'],
-        ['id' => '1columns', 'name' => '1 Column'],
-        ['id' => 'contact', 'name' => 'Contact'],
-        ['id' => 'career', 'name' => 'Career'],
+        ['id' => 1, 'name' => 'Default'],
+        ['id' => 2, 'name' => '2 Columns'],
+        ['id' => 3, 'name' => 'Contact'],
+        ['id' => 4, 'name' => 'Career'],
+        ['id' => 5, 'name' => 'Recruit']
     ],
     'position' => [
         ['id' => 1, 'name' => 'Top'],

@@ -11,6 +11,8 @@ use Nksoft\Articles\Models\Pages;
 use Nksoft\Master\Controllers\WebController;
 use Nksoft\Products\Models\Brands;
 use Nksoft\Products\Models\Categories;
+use Nksoft\Products\Models\Regions;
+use Nksoft\Products\Models\Vintages;
 
 class MenusController extends WebController
 {
@@ -65,6 +67,26 @@ class MenusController extends WebController
         } catch (\Execption $e) {
             return $this->responseError($e);
         }
+    }
+
+    private function getPosition($result) {
+        $idSelected = $result ? json_decode($result->position) : [];
+        $data = array();
+        foreach ($this->position() as $item) {
+            $selected = array(
+                'opened' => false,
+                'selected' => in_array($item['id'], $idSelected) ? true : false,
+            );
+            $data[] = array(
+                'text' => $item['name'],
+                'icon' => 'fas fa-folder',
+                'id' => $item['id'],
+                'state' => $selected,
+                'children' => null,
+                'slug' => '',
+            );
+        }
+        return $data;
     }
 
     private function formElement($result = null)
@@ -123,7 +145,18 @@ class MenusController extends WebController
                     'opened' => true,
                     'selected' => $result && $result->parent_id == 0,
                 ],
-                'children' => Brands::GetListByMenu($result, 'vintages'),
+                'children' => Vintages::GetListByMenu($result, 'vintages'),
+            ],
+            [
+                'text' => trans('nksoft::common.regions'),
+                'id' => 0,
+                'icon' => 'fas fa-folder',
+                'type' => 'regions',
+                'state' => [
+                    'opened' => true,
+                    'selected' => $result && $result->parent_id == 0,
+                ],
+                'children' => Regions::GetListWithParentByMenu(array('parent_id' => 0), $result, 'regions'),
             ],
         ];
         $parent = [
@@ -152,7 +185,7 @@ class MenusController extends WebController
                 'label' => trans('nksoft::common.Content'),
                 'element' => [
                     ['key' => 'parent_id', 'label' => trans('nksoft::common.root'), 'data' => $parent, 'type' => 'tree'],
-                    ['key' => 'position', 'label' => trans('nksoft::common.Position.Title'), 'data' => $this->position(), 'type' => 'select'],
+                    ['key' => 'position', 'label' => trans('nksoft::common.Position.Title'), 'data' => $this->getPosition($result), 'multiple' => true, 'type' => 'tree'],
                     ['key' => 'is_active', 'label' => trans('nksoft::common.Status'), 'data' => $this->status(), 'type' => 'select'],
                     ['key' => 'name', 'label' => trans('nksoft::common.Name'), 'data' => null, 'class' => 'required', 'type' => 'text'],
                     ['key' => 'order_by', 'label' => trans('nksoft::common.Order By'), 'data' => null, 'type' => 'number'],
@@ -206,11 +239,8 @@ class MenusController extends WebController
                     $data[$item] = $request->get($item);
                 }
             }
-            if (!$data['slug']) {
-                $data['slug'] = $data['name'];
-            }
+            $data['slug'] = $this->getSlug($data);
             if(!$data['parent_id']) $data['parent_id'] = 0;
-            $data['slug'] = Str::slug($data['slug'] . rand(100, strtotime('now')));
             $result = CurrentModel::create($data);
             if ($request->hasFile('images')) {
                 $images = $request->file('images');
@@ -287,11 +317,9 @@ class MenusController extends WebController
                     $data[$item] = $request->get($item);
                 }
             }
+            $data['slug'] = $this->getSlug($data);
             foreach ($data as $k => $v) {
                 $result->$k = $v;
-            }
-            if (!$data['slug']) {
-                $data['slug'] = Str::slug($data['name'] . rand(100, strtotime('now')), '-');
             }
 
             $result->save();
