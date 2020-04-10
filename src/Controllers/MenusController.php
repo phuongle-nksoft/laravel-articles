@@ -246,7 +246,7 @@ class MenusController extends WebController
             if (!$data['parent_id']) {
                 $data['parent_id'] = 0;
             }
-
+            $data['position'] = \implode(',', json_decode($data['position']));
             $result = CurrentModel::create($data);
             if ($request->hasFile('images')) {
                 $images = $request->file('images');
@@ -286,6 +286,7 @@ class MenusController extends WebController
     {
         try {
             $result = CurrentModel::select($this->formData)->with(['images'])->find($id);
+            $result->position = \json_encode(\explode(',', $result->position));
             \array_push($this->formData, 'images');
             $response = [
                 'formElement' => $this->formElement($result),
@@ -324,6 +325,7 @@ class MenusController extends WebController
                 }
             }
             $data['slug'] = $this->getSlug($data);
+            $data['position'] = \implode(',', json_decode($data['position']));
             foreach ($data as $k => $v) {
                 $result->$k = $v;
             }

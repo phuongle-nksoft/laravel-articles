@@ -40,4 +40,23 @@ class Menus extends NksoftModel
         }
         return $data;
     }
+
+    public static function getListMenuView($where = ['parent_id' => 0])
+    {
+        $fs = self::where($where)->orderBy('order_by')->get();
+        $data = array();
+        if ($fs) {
+            foreach ($fs as $item) {
+                $data[] = array(
+                    'text' => $item->name,
+                    'id' => $item->id,
+                    'parent_id' => $item->parent_id,
+                    'position' => $item->position,
+                    'children' => self::getListMenuView(['parent_id' => $item->id]),
+                    'slug' => $item->slug,
+                );
+            }
+        }
+        return $data;
+    }
 }
