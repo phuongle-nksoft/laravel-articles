@@ -69,7 +69,7 @@ class BlocksController extends WebController
                 'key' => 'general',
                 'label' => trans('nksoft::common.General'),
                 'element' => [
-                    ['key' => 'identify', 'label' => trans('nksoft::common.Identify'), 'data' => null, 'class' => 'required', 'type' => 'text'],
+                    ['key' => 'identify', 'label' => trans('nksoft::common.Identify'), 'data' => null, 'class' => 'required', 'readonly' => true, 'type' => 'text'],
                     ['key' => 'is_active', 'label' => trans('nksoft::common.Status'), 'data' => $this->status(), 'type' => 'select'],
                     ['key' => 'meta_description', 'label' => trans('nksoft::common.Meta Description'), 'data' => null, 'type' => 'textarea'],
                 ],

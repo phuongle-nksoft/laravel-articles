@@ -51,12 +51,12 @@ class Menus extends NksoftModel
                     'text' => $item->name,
                     'id' => $item->id,
                     'parent_id' => $item->parent_id,
-                    'position' => $item->position,
+                    'position' => strval($item->position),
                     'children' => self::getListMenuView(['parent_id' => $item->id]),
                     'slug' => $item->slug,
                 );
             }
         }
-        return $data;
+        return json_encode($data);
     }
 }
