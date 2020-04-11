@@ -6,6 +6,7 @@ use Arr;
 use Illuminate\Http\Request;
 use Nksoft\Articles\Models\Blocks as CurrentModel;
 use Nksoft\Master\Controllers\WebController;
+use Str;
 
 class BlocksController extends WebController
 {
@@ -24,6 +25,7 @@ class BlocksController extends WebController
             $columns = [
                 ['key' => 'id', 'label' => 'Id'],
                 ['key' => 'name', 'label' => trans('nksoft::common.Name')],
+                ['key' => 'identify', 'label' => trans('nksoft::common.Identify')],
                 ['key' => 'is_active', 'label' => trans('nksoft::common.Status'), 'data' => $this->status()],
             ];
             $select = Arr::pluck($columns, 'key');
@@ -127,8 +129,10 @@ class BlocksController extends WebController
                 }
             }
             $data['slug'] = $this->getSlug($data);
+            $data['identify'] = !$data['identify'] ? Str::slug($data['name']) : Str::slug($data['identify']);
 
             $result = CurrentModel::create($data);
+            $this->setUrlRedirects($result);
             if ($request->hasFile('images')) {
                 $images = $request->file('images');
                 $this->setMedia($images, $result->id, $this->module);
@@ -206,10 +210,12 @@ class BlocksController extends WebController
                 }
             }
             $data['slug'] = $this->getSlug($data);
+            $data['identify'] = !$data['identify'] ? Str::slug($data['name']) : Str::slug($data['identify']);
             foreach ($data as $k => $v) {
                 $result->$k = $v;
             }
             $result->save();
+            $this->setUrlRedirects($result);
             if ($request->hasFile('images')) {
                 $images = $request->file('images');
                 $this->setMedia($images, $result->id, $this->module);

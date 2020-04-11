@@ -136,6 +136,7 @@ class PagesController extends WebController
             }
             $data['slug'] = $this->getSlug($data);
             $result = CurrentModel::create($data);
+            $this->setUrlRedirects($result);
             if ($request->hasFile('images')) {
                 $images = $request->file('images');
                 $this->setMedia($images, $result->id, $this->module);
@@ -161,7 +162,25 @@ class PagesController extends WebController
      */
     public function show($id)
     {
-        return view('master::layout');
+        try {
+            $result = CurrentModel::select(['description', 'name', 'page_template', 'id'])->with(['images'])->find($id);
+            if (!$result) {
+                return $this->responseError('404');
+            }
+            $response = [
+                'result' => $result,
+                'banner' => $result->images->first(),
+                'layout' => $result->page_template,
+                'template' => $this->module,
+                'breadcrumb' => [
+                    ['link' => '/', 'label' => \trans('nksoft::common.Home')],
+                    ['active' => true, 'link' => '#', 'label' => $result->name],
+                ],
+            ];
+            return $this->responseViewSuccess($response);
+        } catch (\Exception $e) {
+            return $this->responseError($e->getMessage());
+        }
     }
 
     /**
@@ -217,6 +236,7 @@ class PagesController extends WebController
             }
 
             $result->save();
+            $this->setUrlRedirects($result);
             if ($request->hasFile('images')) {
                 $images = $request->file('images');
                 $this->setMedia($images, $result->id, $this->module);

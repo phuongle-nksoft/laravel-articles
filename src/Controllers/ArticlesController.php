@@ -133,6 +133,7 @@ class ArticlesController extends WebController
 
             $data['slug'] = $this->getSlug($data);
             $result = CurrentModel::create($data);
+            $this->setUrlRedirects($result);
             if ($request->hasFile('images')) {
                 $images = $request->file('images');
                 $this->setMedia($images, $result->id, $this->module);
@@ -158,7 +159,26 @@ class ArticlesController extends WebController
      */
     public function show($id)
     {
-        return view('master::layout');
+        try {
+            $result = CurrentModel::select(['description', 'name', 'categories_id', 'id', 'created_at', 'slug'])->with(['images'])->find($id);
+            if (!$result) {
+                return $this->responseError('404');
+            }
+            $response = [
+                'result' => $result,
+                'banner' => $result->images->first(),
+                'template' => $this->module,
+                'layout' => 2,
+                'breadcrumb' => [
+                    ['link' => '/', 'label' => \trans('nksoft::common.Home')],
+                    ['link' => '/' . $result->category->slug, 'label' => $result->category->name],
+                    ['link' => '#', 'label' => $result->name],
+                ],
+            ];
+            return $this->responseViewSuccess($response);
+        } catch (\Exception $e) {
+            return $this->responseError($e->getMessage());
+        }
     }
 
     /**
@@ -216,6 +236,7 @@ class ArticlesController extends WebController
                 $result->$k = $v;
             }
             $result->save();
+            $this->setUrlRedirects($result);
             if ($request->hasFile('images')) {
                 $images = $request->file('images');
                 $this->setMedia($images, $result->id, $this->module);

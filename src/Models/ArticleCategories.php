@@ -14,6 +14,28 @@ class ArticleCategories extends NksoftModel
         return $this->hasMany('\Nksoft\Master\Models\FilesUpload', 'parent_id')->where(['type' => 'article-categories']);
     }
 
+    public function articles()
+    {
+        return $this->hasMany(Articles::class, 'categories_id')->select(['slug', 'short_content', 'id', 'name', 'is_active', 'categories_id', 'description'])->where(['is_active' => 1])->with(['images']);
+    }
+
+    public function childrens()
+    {
+        return $this->hasMany(ArticleCategories::class, 'parent_id')->select(['slug', 'id', 'name', 'is_active', 'parent_id', 'description'])->where(['is_active' => 1])->with(['images', 'articles', 'childrens']);
+    }
+
+    public static function GetListIds($where, &$data = array())
+    {
+        $result = self::where($where)->get();
+        if ($result) {
+            foreach ($result as $item) {
+                $data[] = $item->id;
+                self::GetListIds(['parent_id' => $item->id], $data);
+            }
+        }
+        return $data;
+    }
+
     /**
      * Get list category with recursive
      */
@@ -55,12 +77,11 @@ class ArticleCategories extends NksoftModel
             foreach ($fs as $item) {
                 $selected = array(
                     'opened' => false,
-                    'selected' => $item->id === $parentId && $result->type === $type ? true : false,
+                    'selected' => $item->id === $parentId ? true : false,
                 );
                 $data[] = array(
                     'text' => $item->name,
                     'icon' => 'fas fa-folder',
-                    'type' => $type,
                     'id' => $item->id,
                     'state' => $selected,
                     'children' => self::GetListByArticle(['parent_id' => $item->id], $result),

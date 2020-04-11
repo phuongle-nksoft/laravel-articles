@@ -5,6 +5,7 @@ namespace Nksoft\Articles\Controllers;
 use Arr;
 use Illuminate\Http\Request;
 use Nksoft\Articles\Models\ArticleCategories as CurrentModel;
+use Nksoft\Articles\Models\Articles;
 use Nksoft\Master\Controllers\WebController;
 
 class ArticleCategoriesController extends WebController
@@ -154,6 +155,7 @@ class ArticleCategoriesController extends WebController
 
             $data['slug'] = $this->getSlug($data);
             $result = CurrentModel::create($data);
+            $this->setUrlRedirects($result);
             if ($request->hasFile('images')) {
                 $images = $request->file('images');
                 $this->setMedia($images, $result->id, $this->module);
@@ -179,7 +181,27 @@ class ArticleCategoriesController extends WebController
      */
     public function show($id)
     {
-        return view('master::layout');
+        try {
+            $result = CurrentModel::select(['description', 'name', 'page_template', 'id'])->with(['images', 'childrens'])->find($id);
+            $listIds = CurrentModel::GetListIds(['id' => $id]);
+            if (!$result) {
+                return $this->responseError('404');
+            }
+            $response = [
+                'result' => $result,
+                'articles' => Articles::whereIn('categories_id', $listIds)->with(['images'])->paginate(6),
+                'banner' => $result->images->first(),
+                'layout' => $result->page_template,
+                'template' => $this->module,
+                'breadcrumb' => [
+                    ['link' => '/', 'label' => \trans('nksoft::common.Home')],
+                    ['active' => true, 'link' => '#', 'label' => $result->name],
+                ],
+            ];
+            return $this->responseViewSuccess($response);
+        } catch (\Exception $e) {
+            return $this->responseError($e->getMessage());
+        }
     }
 
     /**
@@ -238,6 +260,7 @@ class ArticleCategoriesController extends WebController
                 $result->$k = $v;
             }
             $result->save();
+            $this->setUrlRedirects($result);
             if ($request->hasFile('images')) {
                 $images = $request->file('images');
                 $this->setMedia($images, $result->id, $this->module);

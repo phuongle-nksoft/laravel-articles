@@ -43,7 +43,7 @@ class Menus extends NksoftModel
 
     public static function getListMenuView($where = ['parent_id' => 0])
     {
-        $fs = self::where($where)->orderBy('order_by')->get();
+        $fs = self::where($where)->where(['is_active' => 1])->orderBy('order_by')->get();
         $data = array();
         if ($fs) {
             foreach ($fs as $item) {
