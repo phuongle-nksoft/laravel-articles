@@ -24,18 +24,6 @@ class ArticleCategories extends NksoftModel
         return $this->hasMany(ArticleCategories::class, 'parent_id')->select(['slug', 'id', 'name', 'is_active', 'parent_id', 'description'])->where(['is_active' => 1])->with(['images', 'articles', 'childrens']);
     }
 
-    public static function GetListIds($where, &$data = array())
-    {
-        $result = self::where($where)->get();
-        if ($result) {
-            foreach ($result as $item) {
-                $data[] = $item->id;
-                self::GetListIds(['parent_id' => $item->id], $data);
-            }
-        }
-        return $data;
-    }
-
     /**
      * Get list category with recursive
      */
