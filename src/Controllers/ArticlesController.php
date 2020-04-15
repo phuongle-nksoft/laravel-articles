@@ -170,8 +170,8 @@ class ArticlesController extends WebController
                 'template' => $this->module,
                 'layout' => 2,
                 'breadcrumb' => [
-                    ['link' => '/', 'label' => \trans('nksoft::common.Home')],
-                    ['link' => '/' . $result->category->slug, 'label' => $result->category->name],
+                    ['link' => '', 'label' => \trans('nksoft::common.Home')],
+                    ['link' => $result->category->slug, 'label' => $result->category->name],
                     ['link' => '#', 'label' => $result->name],
                 ],
             ];
