@@ -5,7 +5,8 @@ return [
         ['id' => 2, 'name' => '2 Columns'],
         ['id' => 3, 'name' => 'Contact'],
         ['id' => 4, 'name' => 'Career'],
-        ['id' => 5, 'name' => 'Recruit']
+        ['id' => 5, 'name' => 'Recruit'],
+        ['id' => 6, 'name' => 'Promotion Layout'],
     ],
     'position' => [
         ['id' => 1, 'name' => 'Top'],

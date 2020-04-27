@@ -21,6 +21,7 @@ class CreateMenusTable extends Migration
             $table->boolean('is_active')->nullable()->default(0);
             $table->integer('order_by')->nullable()->default(0);
             $table->string('slug')->nullable();
+            $table->string('icon')->nullable();
             $table->integer('position')->nullable()->default(1);
             $table->string('type')->nullable()->default('pages');
             $table->text('meta_description')->nullable();

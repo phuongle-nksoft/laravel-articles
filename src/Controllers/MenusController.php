@@ -15,7 +15,7 @@ use Nksoft\Products\Models\Vintages;
 
 class MenusController extends WebController
 {
-    private $formData = ['id', 'name', 'parent_id', 'is_active', 'order_by', 'slug', 'url_to', 'position', 'type', 'meta_description'];
+    private $formData = CurrentModel::FIELDS;
 
     protected $module = 'menus';
 
@@ -196,6 +196,7 @@ class MenusController extends WebController
                     ['key' => 'is_active', 'label' => trans('nksoft::common.Status'), 'data' => $this->status(), 'type' => 'select'],
                     ['key' => 'name', 'label' => trans('nksoft::common.Name'), 'data' => null, 'class' => 'required', 'type' => 'text'],
                     ['key' => 'order_by', 'label' => trans('nksoft::common.Order By'), 'data' => null, 'type' => 'number'],
+                    ['key' => 'icon', 'label' => trans('nksoft::common.Icon'), 'data' => null, 'type' => 'text'],
                     ['key' => 'slug', 'label' => trans('nksoft::common.Slug'), 'data' => null, 'type' => 'text'],
                 ],
             ],

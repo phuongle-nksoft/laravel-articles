@@ -5,8 +5,9 @@ use Nksoft\Master\Models\NksoftModel;
 
 class Menus extends NksoftModel
 {
+    const FIELDS = ['id', 'name', 'parent_id', 'is_active', 'order_by', 'slug', 'url_to', 'type', 'icon', 'position', 'meta_description'];
     protected $table = 'menus';
-    protected $fillable = ['id', 'name', 'parent_id', 'is_active', 'order_by', 'slug', 'url_to', 'type', 'position', 'meta_description'];
+    protected $fillable = self::FIELDS;
 
     /**
      * Get list category to product
@@ -54,6 +55,7 @@ class Menus extends NksoftModel
                     'position' => strval($item->position),
                     'children' => self::getListMenuView(['parent_id' => $item->id]),
                     'slug' => $item->slug,
+                    'icon' => $item->icon,
                 );
             }
         }
