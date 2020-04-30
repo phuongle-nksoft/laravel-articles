@@ -4,11 +4,8 @@
     "description": "The Laravel Framework.",
     "license": "proprietary",
     "require": {
-        "php": ">=7.1",
-        "laravel/framework": ">=5.8",
-        "intervention/image": "^2.3",
-        "nksoft/laravel-master": ">=2.0",
-        "nksoft/laravel-products": ">=2.0"
+        "nksoft/laravel-master": ">=1.0",
+        "nksoft/laravel-products": ">=1.0"
     },
     "authors": [{
         "name": "PhuongLe",
