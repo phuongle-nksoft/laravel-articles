@@ -85,7 +85,7 @@ class MenusController extends WebController
                 'selected' => in_array($item['id'], $idSelected) ? true : false,
             );
             $data[] = array(
-                'text' => $item['name'],
+                'name' => $item['name'],
                 'icon' => 'fas fa-folder',
                 'id' => $item['id'],
                 'state' => $selected,
@@ -100,7 +100,7 @@ class MenusController extends WebController
     {
         $categories = [
             [
-                'text' => trans('nksoft::common.article categories'),
+                'name' => trans('nksoft::common.article categories'),
                 'id' => 0,
                 'icon' => 'fas fa-folder',
                 'type' => 'article-categories',
@@ -111,7 +111,7 @@ class MenusController extends WebController
                 'children' => ArticleCategories::GetListWithParentByMenu(array('parent_id' => 0), $result, 'article-categories'),
             ],
             [
-                'text' => trans('nksoft::common.pages'),
+                'name' => trans('nksoft::common.pages'),
                 'id' => 0,
                 'icon' => 'fas fa-folder',
                 'type' => 'pages',
@@ -122,7 +122,7 @@ class MenusController extends WebController
                 'children' => Pages::GetListByMenu($result, 'pages'),
             ],
             [
-                'text' => trans('nksoft::common.categories'),
+                'name' => trans('nksoft::common.categories'),
                 'id' => 0,
                 'icon' => 'fas fa-folder',
                 'type' => 'categories',
@@ -133,7 +133,7 @@ class MenusController extends WebController
                 'children' => Categories::GetListWithParentByMenu(array('parent_id' => 0), $result, 'categories'),
             ],
             [
-                'text' => trans('nksoft::common.brands'),
+                'name' => trans('nksoft::common.brands'),
                 'id' => 0,
                 'icon' => 'fas fa-folder',
                 'type' => 'brands',
@@ -144,7 +144,7 @@ class MenusController extends WebController
                 'children' => Brands::GetListByMenu($result, 'brands'),
             ],
             [
-                'text' => trans('nksoft::common.vintages'),
+                'name' => trans('nksoft::common.vintages'),
                 'id' => 0,
                 'icon' => 'fas fa-folder',
                 'type' => 'vintages',
@@ -155,7 +155,7 @@ class MenusController extends WebController
                 'children' => Vintages::GetListByMenu($result, 'vintages'),
             ],
             [
-                'text' => trans('nksoft::common.regions'),
+                'name' => trans('nksoft::common.regions'),
                 'id' => 0,
                 'icon' => 'fas fa-folder',
                 'type' => 'regions',
@@ -168,7 +168,7 @@ class MenusController extends WebController
         ];
         $parent = [
             [
-                'text' => trans('nksoft::common.root'),
+                'name' => trans('nksoft::common.root'),
                 'id' => 0,
                 'icon' => 'fas fa-folder',
                 'state' => [

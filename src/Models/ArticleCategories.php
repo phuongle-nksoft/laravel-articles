@@ -40,7 +40,7 @@ class ArticleCategories extends NksoftModel
                     'selected' => $item->id === $parentId ? true : false,
                 );
                 $data[] = array(
-                    'text' => $item->name,
+                    'name' => $item->name,
                     'icon' => 'fas fa-folder',
                     'id' => $item->id,
                     'state' => $selected,
