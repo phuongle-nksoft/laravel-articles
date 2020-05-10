@@ -4,6 +4,7 @@ namespace Nksoft\Articles\Controllers;
 
 use Arr;
 use Illuminate\Http\Request;
+use Nksoft\Articles\Models\Menus;
 use Nksoft\Articles\Models\Pages as CurrentModel;
 use Nksoft\Master\Controllers\WebController;
 
@@ -172,6 +173,7 @@ class PagesController extends WebController
                 'banner' => $result->images->first(),
                 'layout' => $result->page_template,
                 'template' => $this->module,
+                'menus' => Menus::getListMenuView(),
                 'breadcrumb' => [
                     ['link' => '/', 'label' => \trans('nksoft::common.Home')],
                     ['active' => true, 'link' => '#', 'label' => $result->name],

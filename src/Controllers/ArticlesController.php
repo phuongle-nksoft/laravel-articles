@@ -6,6 +6,7 @@ use Arr;
 use Illuminate\Http\Request;
 use Nksoft\Articles\Models\ArticleCategories;
 use Nksoft\Articles\Models\Articles as CurrentModel;
+use Nksoft\Articles\Models\Menus;
 use Nksoft\Master\Controllers\WebController;
 
 class ArticlesController extends WebController
@@ -168,6 +169,7 @@ class ArticlesController extends WebController
                 'result' => $result,
                 'banner' => $result->images->first(),
                 'template' => $this->module,
+                'menus' => Menus::getListMenuView(),
                 'layout' => 2,
                 'breadcrumb' => [
                     ['link' => '', 'label' => \trans('nksoft::common.Home')],
