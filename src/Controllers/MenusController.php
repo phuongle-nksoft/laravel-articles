@@ -29,9 +29,9 @@ class MenusController extends WebController
     {
         try {
             $columns = [
-                ['key' => 'id', 'label' => 'Id'],
+                ['key' => 'id', 'label' => 'Id', 'type' => 'hidden'],
                 ['key' => 'name', 'label' => trans('nksoft::common.Name')],
-                ['key' => 'is_active', 'label' => trans('nksoft::common.Status'), 'data' => $this->status()],
+                ['key' => 'is_active', 'label' => trans('nksoft::common.Status'), 'data' => $this->status(), 'type' => 'select'],
             ];
             $select = Arr::pluck($columns, 'key');
             $results = CurrentModel::GetListMenu(['parent_id' => 0], null);
@@ -246,6 +246,9 @@ class MenusController extends WebController
                 if (!in_array($item, $this->excludeCol)) {
                     $data[$item] = $request->get($item);
                 }
+            }
+            if ($request->get('duplicate')) {
+                $data['slug'] = null;
             }
             $data['slug'] = $this->getSlug($data);
             if (!$data['parent_id']) {

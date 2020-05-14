@@ -24,9 +24,9 @@ class PagesController extends WebController
     {
         try {
             $columns = [
-                ['key' => 'id', 'label' => 'Id'],
+                ['key' => 'id', 'label' => 'Id', 'type' => 'hidden'],
                 ['key' => 'name', 'label' => trans('nksoft::common.Name')],
-                ['key' => 'is_active', 'label' => trans('nksoft::common.Status'), 'data' => $this->status()],
+                ['key' => 'is_active', 'label' => trans('nksoft::common.Status'), 'data' => $this->status(), 'type' => 'select'],
             ];
             $select = Arr::pluck($columns, 'key');
             $results = CurrentModel::select($select)->with(['histories'])->paginate();
@@ -134,6 +134,9 @@ class PagesController extends WebController
                 if (!in_array($item, $this->excludeCol)) {
                     $data[$item] = $request->get($item);
                 }
+            }
+            if ($request->get('duplicate')) {
+                $data['slug'] = null;
             }
             $data['slug'] = $this->getSlug($data);
             $result = CurrentModel::create($data);

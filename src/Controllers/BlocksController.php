@@ -23,10 +23,10 @@ class BlocksController extends WebController
     {
         try {
             $columns = [
-                ['key' => 'id', 'label' => 'Id'],
+                ['key' => 'id', 'label' => 'Id', 'type' => 'hidden'],
                 ['key' => 'name', 'label' => trans('nksoft::common.Name')],
                 ['key' => 'identify', 'label' => trans('nksoft::common.Identify')],
-                ['key' => 'is_active', 'label' => trans('nksoft::common.Status'), 'data' => $this->status()],
+                ['key' => 'is_active', 'label' => trans('nksoft::common.Status'), 'data' => $this->status(), 'type' => 'select'],
             ];
             $select = Arr::pluck($columns, 'key');
             $results = CurrentModel::select($select)->with(['histories'])->paginate();
@@ -127,6 +127,10 @@ class BlocksController extends WebController
                 if (!in_array($item, $this->excludeCol)) {
                     $data[$item] = $request->get($item);
                 }
+            }
+            if ($request->get('duplicate')) {
+                $data['slug'] = null;
+                $data['identify'] = null;
             }
             $data['slug'] = $this->getSlug($data);
             $data['identify'] = !$data['identify'] ? Str::slug($data['name']) : Str::slug($data['identify']);
