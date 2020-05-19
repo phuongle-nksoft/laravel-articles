@@ -2,18 +2,17 @@
 
 namespace Nksoft\Articles\Controllers;
 
-use Arr;
 use Illuminate\Http\Request;
-use Nksoft\Articles\Models\Menus;
-use Nksoft\Articles\Models\Pages as CurrentModel;
+use Illuminate\Support\Arr;
+use Nksoft\Articles\Models\Banners as CurrentModel;
+use Nksoft\Articles\Models\Pages;
 use Nksoft\Master\Controllers\WebController;
 
-class PagesController extends WebController
+class BannersController extends WebController
 {
-    private $formData = ['id', 'name', 'page_template', 'is_active', 'order_by', 'slug', 'description', 'meta_description'];
+    private $formData = CurrentModel::FIELDS;
 
-    protected $module = 'pages';
-
+    protected $module = 'banners';
     protected $model = CurrentModel::class;
     /**
      * Display a listing of the resource.
@@ -64,38 +63,23 @@ class PagesController extends WebController
         }
     }
 
-    public function pageTemplate()
-    {
-        $pages = [];
-        foreach (config('nksoft.pageTemplate') as $v => $k) {
-            $pages[] = ['id' => $k['id'], 'name' => trans('nksoft::common.layout.' . $k['name'])];
-        }
-        return $pages;
-    }
-
     private function formElement($result = null)
     {
+        $pages = Pages::select(['id', 'name'])->get();
         return [
             [
                 'key' => 'general',
                 'label' => trans('nksoft::common.General'),
                 'element' => [
                     ['key' => 'is_active', 'label' => trans('nksoft::common.Status'), 'data' => $this->status(), 'type' => 'select'],
-                    ['key' => 'page_template', 'label' => trans('nksoft::common.Layout Page'), 'data' => $this->pageTemplate(), 'type' => 'select'],
-                    ['key' => 'meta_description', 'label' => trans('nksoft::common.Meta Description'), 'data' => null, 'type' => 'textarea'],
-                ],
-                'active' => true,
-            ],
-            [
-                'key' => 'inputForm',
-                'label' => trans('nksoft::common.Content'),
-                'element' => [
+                    ['key' => 'pages_id', 'label' => trans('nksoft::common.pages'), 'data' => $pages, 'type' => 'select'],
                     ['key' => 'name', 'label' => trans('nksoft::common.Name'), 'data' => null, 'class' => 'required', 'type' => 'text'],
                     ['key' => 'description', 'label' => trans('nksoft::common.Description'), 'data' => null, 'type' => 'editor'],
                     ['key' => 'order_by', 'label' => trans('nksoft::common.Order By'), 'data' => null, 'type' => 'number'],
                     ['key' => 'slug', 'label' => trans('nksoft::common.Slug'), 'data' => null, 'type' => 'text'],
                     ['key' => 'images', 'label' => trans('nksoft::common.Images'), 'data' => null, 'type' => 'image'],
                 ],
+                'active' => true,
             ],
         ];
     }
@@ -135,6 +119,10 @@ class PagesController extends WebController
                     $data[$item] = $request->get($item);
                 }
             }
+            if (!$data['pages_id']) {
+                $data['pages_id'] = 0;
+            }
+
             if ($request->get('duplicate')) {
                 $data['slug'] = null;
             }
@@ -144,10 +132,6 @@ class PagesController extends WebController
             if ($request->hasFile('images')) {
                 $images = $request->file('images');
                 $this->setMedia($images, $result->id, $this->module);
-            }
-            if ($request->hasFile('banner')) {
-                $images = $request->file('banner');
-                $this->setMedia($images, $result->id, $this->module, true);
             }
             $response = [
                 'result' => $result,
@@ -166,26 +150,7 @@ class PagesController extends WebController
      */
     public function show($id)
     {
-        try {
-            $result = CurrentModel::select(['description', 'name', 'page_template', 'id'])->with(['images', 'banners'])->find($id);
-            if (!$result) {
-                return $this->responseError('404');
-            }
-            $response = [
-                'result' => $result,
-                'banner' => $result->images->first(),
-                'layout' => $result->page_template,
-                'template' => $this->module,
-                'menus' => Menus::getListMenuView(),
-                'breadcrumb' => [
-                    ['link' => '/', 'label' => \trans('nksoft::common.Home')],
-                    ['active' => true, 'link' => '#', 'label' => $result->name],
-                ],
-            ];
-            return $this->responseViewSuccess($response);
-        } catch (\Exception $e) {
-            return $this->responseError($e->getMessage());
-        }
+
     }
 
     /**
@@ -235,20 +200,18 @@ class PagesController extends WebController
                     $data[$item] = $request->get($item);
                 }
             }
+            if (!$data['pages_id']) {
+                $data['pages_id'] = 0;
+            }
             $data['slug'] = $this->getSlug($data);
             foreach ($data as $k => $v) {
                 $result->$k = $v;
             }
-
             $result->save();
             $this->setUrlRedirects($result);
             if ($request->hasFile('images')) {
                 $images = $request->file('images');
                 $this->setMedia($images, $result->id, $this->module);
-            }
-            if ($request->hasFile('banner')) {
-                $images = $request->file('banner');
-                $this->setMedia($images, $result->id, $this->module, true);
             }
             $response = [
                 'result' => $result,
@@ -258,5 +221,4 @@ class PagesController extends WebController
             return $this->responseError($e);
         }
     }
-
 }

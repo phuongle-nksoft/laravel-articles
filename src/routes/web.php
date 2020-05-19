@@ -11,6 +11,7 @@ Route::group(['middleware' => 'web'], function () {
             'pages' => WebController::class,
             'blocks' => WebController::class,
             'menus' => WebController::class,
+            'banners' => WebController::class,
         ]);
     });
 });
