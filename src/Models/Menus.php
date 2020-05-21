@@ -59,6 +59,6 @@ class Menus extends NksoftModel
                 );
             }
         }
-        return json_encode($data);
+        return $data;
     }
 }

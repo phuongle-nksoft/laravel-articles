@@ -180,25 +180,20 @@ class MenusController extends WebController
         ];
         return [
             [
-                'key' => 'general',
-                'label' => trans('nksoft::common.General'),
-                'element' => [
-                    ['key' => 'url_to', 'label' => trans('nksoft::common.Url To'), 'data' => $categories, 'type' => 'tree'],
-                ],
-                'active' => true,
-            ],
-            [
                 'key' => 'inputForm',
                 'label' => trans('nksoft::common.Content'),
                 'element' => [
-                    ['key' => 'parent_id', 'label' => trans('nksoft::common.root'), 'data' => $parent, 'type' => 'tree'],
+                    ['key' => 'url_to', 'label' => trans('nksoft::common.Url To'), 'data' => $categories, 'type' => 'select'],
+                    ['key' => 'parent_id', 'label' => trans('nksoft::common.root'), 'data' => $parent, 'type' => 'select'],
                     ['key' => 'position', 'label' => trans('nksoft::common.Position.Title'), 'data' => $this->getPosition($result), 'multiple' => true, 'type' => 'tree'],
                     ['key' => 'is_active', 'label' => trans('nksoft::common.Status'), 'data' => $this->status(), 'type' => 'select'],
                     ['key' => 'name', 'label' => trans('nksoft::common.Name'), 'data' => null, 'class' => 'required', 'type' => 'text'],
                     ['key' => 'order_by', 'label' => trans('nksoft::common.Order By'), 'data' => null, 'type' => 'number'],
                     ['key' => 'icon', 'label' => trans('nksoft::common.Icon'), 'data' => null, 'type' => 'text'],
                     ['key' => 'slug', 'label' => trans('nksoft::common.Slug'), 'data' => null, 'type' => 'text'],
+                    ['key' => 'none_slug', 'label' => trans('nksoft::common.None Slug'), 'data' => null, 'type' => 'checkbox'],
                 ],
+                'active' => true,
             ],
         ];
     }
@@ -251,6 +246,10 @@ class MenusController extends WebController
                 $data['slug'] = null;
             }
             $data['slug'] = $this->getSlug($data);
+            if ($data['none_slug']) {
+                $data['slug'] = null;
+            }
+
             if (!$data['parent_id']) {
                 $data['parent_id'] = 0;
             }
@@ -296,6 +295,8 @@ class MenusController extends WebController
             $result = CurrentModel::select($this->formData)->with(['images'])->find($id);
             // $result->position = \json_encode(\explode(',', $result->position));
             \array_push($this->formData, 'images');
+            \array_push($this->formData, 'none_slug');
+            $result->none_slug = !$result->slug ? 1 : 0;
             $response = [
                 'formElement' => $this->formElement($result),
                 'result' => $result,
@@ -332,7 +333,13 @@ class MenusController extends WebController
                     $data[$item] = $request->get($item);
                 }
             }
+            if (!$data['parent_id']) {
+                $data['parent_id'] = 0;
+            }
             $data['slug'] = $this->getSlug($data);
+            if ($request->get('none_slug')) {
+                $data['slug'] = null;
+            }
             // $data['position'] = \implode(',', json_decode($data['position']));
             foreach ($data as $k => $v) {
                 $result->$k = $v;
