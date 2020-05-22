@@ -58,6 +58,7 @@ class MenusController extends WebController
     {
         try {
             \array_push($this->formData, 'images');
+            \array_push($this->formData, 'none_slug');
             $response = [
                 'formElement' => $this->formElement(),
                 'result' => null,
@@ -246,7 +247,7 @@ class MenusController extends WebController
                 $data['slug'] = null;
             }
             $data['slug'] = $this->getSlug($data);
-            if ($data['none_slug']) {
+            if ($request->get('none_slug')) {
                 $data['slug'] = null;
             }
 
