@@ -16,14 +16,6 @@ class NavigationsTableSeeder extends Seeder
     {
         $article = [
             [
-                'title' => 'Banners',
-                'link' => 'banners',
-                'icon' => 'nav-icon far fa-images',
-                'is_active' => true,
-                'order_by' => 1,
-                'roles_id' => json_encode([1, 2]),
-            ],
-            [
                 'title' => 'Menus',
                 'link' => 'menus',
                 'icon' => 'nav-icon fas fa-ellipsis-v',

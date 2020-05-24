@@ -12,6 +12,7 @@ Route::group(['middleware' => 'web'], function () {
             'blocks' => WebController::class,
             'menus' => WebController::class,
             'banners' => WebController::class,
+            'promotion-images' => WebController::class,
         ]);
     });
 });

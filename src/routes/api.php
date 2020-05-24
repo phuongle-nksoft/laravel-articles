@@ -15,5 +15,6 @@ Route::group(['prefix' => 'api/admin', 'middleware' => 'web'], function () {
         'blocks' => BlocksController::class,
         'menus' => MenusController::class,
         'banners' => BannersController::class,
+        'promotion-images' => BlocksController::class,
     ]);
 });

@@ -29,13 +29,22 @@ class BlocksController extends WebController
                 ['key' => 'is_active', 'label' => trans('nksoft::common.Status'), 'data' => $this->status(), 'type' => 'select'],
             ];
             $select = Arr::pluck($columns, 'key');
-            $results = CurrentModel::select($select)->with(['histories'])->paginate();
+            $results = CurrentModel::select($select);
+            $request = request()->segment(3);
+            if ($request == 'promotion-images') {
+                $results = $results->whereIn('identify', ['promotion1', 'promotion2', 'promotion3', 'promotion4']);
+                $this->module = 'promotion-images';
+            } else {
+                $results = $results->whereNotIn('identify', ['promotion1', 'promotion2', 'promotion3', 'promotion4']);
+            }
+            $results = $results->with(['histories'])->paginate();
             $listDelete = $this->getHistories($this->module)->pluck('parent_id');
             $response = [
                 'rows' => $results,
                 'columns' => $columns,
                 'module' => $this->module,
                 'listDelete' => CurrentModel::whereIn('id', $listDelete)->get(),
+                'disableNew' => true,
             ];
             return $this->responseSuccess($response);
         } catch (\Execption $e) {
@@ -177,11 +186,17 @@ class BlocksController extends WebController
             $result = CurrentModel::select($this->formData)->with(['images'])->find($id);
             \array_push($this->formData, 'images');
             \array_push($this->formData, 'banner');
+            $request = request()->segment(3);
+            if ($request == 'promotion-images') {
+                $this->module = 'promotion-images';
+            }
             $response = [
                 'formElement' => $this->formElement($result),
                 'result' => $result,
                 'formData' => $this->formData,
                 'module' => $this->module,
+                'disableNew' => true,
+                'disableDuplicate' => true,
             ];
             return $this->responseSuccess($response);
         } catch (\Execption $e) {
