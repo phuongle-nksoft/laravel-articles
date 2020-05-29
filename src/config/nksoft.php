@@ -14,4 +14,8 @@ return [
         ['id' => 3, 'name' => 'Bottom'],
         ['id' => 4, 'name' => 'Left'],
     ],
+    'menuLayout' => [
+        ['id' => 1, 'name' => trans('nksoft::articles.Horizontal')],
+        ['id' => 2, 'name' => trans('nksoft::articles.Vertical')],
+    ],
 ];

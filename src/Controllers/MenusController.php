@@ -191,6 +191,7 @@ class MenusController extends WebController
                     ['key' => 'name', 'label' => trans('nksoft::common.Name'), 'data' => null, 'class' => 'required', 'type' => 'text'],
                     ['key' => 'order_by', 'label' => trans('nksoft::common.Order By'), 'data' => null, 'type' => 'number'],
                     ['key' => 'icon', 'label' => trans('nksoft::common.Icon'), 'data' => null, 'type' => 'text'],
+                    ['key' => 'layout', 'label' => trans('nksoft::articles.Menu Layout'), 'data' => config('nksoft.menuLayout'), 'type' => 'select'],
                     ['key' => 'slug', 'label' => trans('nksoft::common.Slug'), 'data' => null, 'type' => 'text'],
                     ['key' => 'none_slug', 'label' => trans('nksoft::common.None Slug'), 'data' => null, 'type' => 'checkbox'],
                 ],

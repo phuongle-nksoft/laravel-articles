@@ -52,6 +52,7 @@ class ArticlesController extends WebController
     {
         try {
             \array_push($this->formData, 'images');
+            \array_push($this->formData, 'banner');
             $response = [
                 'formElement' => $this->formElement(),
                 'result' => null,
@@ -87,6 +88,7 @@ class ArticlesController extends WebController
                     ['key' => 'description', 'label' => trans('nksoft::common.Description'), 'data' => null, 'type' => 'editor'],
                     ['key' => 'order_by', 'label' => trans('nksoft::common.Order By'), 'data' => null, 'type' => 'number'],
                     ['key' => 'slug', 'label' => trans('nksoft::common.Slug'), 'data' => null, 'type' => 'text'],
+                    ['key' => 'banner', 'label' => trans('nksoft::common.Banner'), 'data' => null, 'type' => 'image'],
                     ['key' => 'images', 'label' => trans('nksoft::common.Images'), 'data' => null, 'type' => 'image'],
                 ],
             ],
@@ -144,7 +146,7 @@ class ArticlesController extends WebController
             }
             if ($request->hasFile('banner')) {
                 $images = $request->file('banner');
-                $this->setMedia($images, $result->id, $this->module, true);
+                $this->setMedia($images, $result->id, $this->module, 2);
             }
             $response = [
                 'result' => $result,
@@ -170,7 +172,7 @@ class ArticlesController extends WebController
             }
             $response = [
                 'result' => $result,
-                'banner' => $result->images->first(),
+                'banner' => $result->images()->where(['group_id' => 2])->first(),
                 'template' => $this->module,
                 'menus' => Menus::getListMenuView(),
                 'layout' => 2,
@@ -197,6 +199,7 @@ class ArticlesController extends WebController
         try {
             $result = CurrentModel::select($this->formData)->with(['images'])->find($id);
             \array_push($this->formData, 'images');
+            \array_push($this->formData, 'banner');
             $response = [
                 'formElement' => $this->formElement($result),
                 'result' => $result,
@@ -248,7 +251,7 @@ class ArticlesController extends WebController
             }
             if ($request->hasFile('banner')) {
                 $images = $request->file('banner');
-                $this->setMedia($images, $result->id, $this->module, true);
+                $this->setMedia($images, $result->id, $this->module, 2);
             }
             $response = [
                 'result' => $result,

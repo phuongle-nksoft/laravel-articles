@@ -5,7 +5,7 @@ use Nksoft\Master\Models\NksoftModel;
 
 class Menus extends NksoftModel
 {
-    const FIELDS = ['id', 'name', 'parent_id', 'is_active', 'order_by', 'slug', 'url_to', 'type', 'icon', 'position', 'meta_description'];
+    const FIELDS = ['id', 'name', 'parent_id', 'is_active', 'order_by', 'slug', 'url_to', 'type', 'icon', 'layout', 'position', 'meta_description'];
     protected $table = 'menus';
     protected $fillable = self::FIELDS;
 
@@ -35,6 +35,7 @@ class Menus extends NksoftModel
                     'state' => $selected,
                     'children' => self::GetListMenu(['parent_id' => $item->id], $result),
                     'slug' => $item->slug,
+                    'layout' => $item->layout,
                     'histories' => $item->histories,
                 );
             }
@@ -56,6 +57,7 @@ class Menus extends NksoftModel
                     'children' => self::getListMenuView(['parent_id' => $item->id]),
                     'slug' => $item->slug,
                     'icon' => $item->icon,
+                    'layout' => $item->layout,
                 );
             }
         }
