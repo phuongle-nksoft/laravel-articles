@@ -58,6 +58,7 @@ class Menus extends NksoftModel
                     'slug' => $item->slug,
                     'icon' => $item->icon,
                     'layout' => $item->layout,
+                    'type' => $item->type,
                 );
             }
         }
