@@ -107,7 +107,7 @@ class MenusController extends WebController
                 'type' => 'article-categories',
                 'state' => [
                     'opened' => true,
-                    'selected' => $result && $result->parent_id == 0,
+                    'selected' => $result && $result->url_to == 0 && $result->type == 'article-categories',
                 ],
                 'children' => ArticleCategories::GetListWithParentByMenu(array('parent_id' => 0), $result, 'article-categories'),
             ],
@@ -118,7 +118,7 @@ class MenusController extends WebController
                 'type' => 'pages',
                 'state' => [
                     'opened' => true,
-                    'selected' => $result && $result->parent_id == 0,
+                    'selected' => $result && $result->url_to == 0 && $result->type == 'pages',
                 ],
                 'children' => Pages::GetListByMenu($result, 'pages'),
             ],
@@ -129,7 +129,7 @@ class MenusController extends WebController
                 'type' => 'categories',
                 'state' => [
                     'opened' => true,
-                    'selected' => $result && $result->parent_id == 0,
+                    'selected' => $result && $result->url_to == 0 && $result->type == 'categories',
                 ],
                 'children' => Categories::GetListWithParentByMenu(array('parent_id' => 0), $result, 'categories'),
             ],
@@ -140,7 +140,7 @@ class MenusController extends WebController
                 'type' => 'brands',
                 'state' => [
                     'opened' => true,
-                    'selected' => $result && $result->parent_id == 0,
+                    'selected' => $result && $result->url_to == 0 && $result->type == 'brands',
                 ],
                 'children' => Brands::GetListByMenu($result, 'brands'),
             ],
@@ -151,7 +151,7 @@ class MenusController extends WebController
                 'type' => 'vintages',
                 'state' => [
                     'opened' => true,
-                    'selected' => $result && $result->parent_id == 0,
+                    'selected' => $result && $result->url_to == 0 && $result->type == 'vintages',
                 ],
                 'children' => Vintages::GetListByMenu($result, 'vintages'),
             ],
@@ -162,9 +162,20 @@ class MenusController extends WebController
                 'type' => 'regions',
                 'state' => [
                     'opened' => true,
-                    'selected' => $result && $result->parent_id == 0,
+                    'selected' => $result && $result->url_to == 0 && $result->type == 'regions',
                 ],
                 'children' => Regions::GetListWithParentByMenu(array('parent_id' => 0), $result, 'regions'),
+            ],
+            [
+                'name' => trans('nksoft::common.products'),
+                'id' => 1,
+                'icon' => 'fas fa-folder',
+                'type' => 'products',
+                'state' => [
+                    'opened' => true,
+                    'selected' => $result && $result->url_to == 1 && $result->type == 'products',
+                ],
+                'children' => [],
             ],
         ];
         $parent = [
