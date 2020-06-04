@@ -193,7 +193,7 @@ class ArticleCategoriesController extends WebController
             }
             $response = [
                 'result' => $result,
-                'articles' => Articles::whereIn('categories_id', $listIds)->with(['images'])->paginate(6),
+                'articles' => Articles::whereIn('categories_id', $listIds)->with(['images'])->orderBy('created_at', 'desc')->paginate(6),
                 'banner' => $result->images->first(),
                 'layout' => $result->page_template,
                 'template' => $this->module,
