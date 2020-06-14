@@ -11,7 +11,7 @@ use Nksoft\Master\Controllers\WebController;
 
 class ArticlesController extends WebController
 {
-    private $formData = ['id', 'name', 'categories_id', 'is_active', 'order_by', 'slug', 'short_content', 'description', 'meta_description'];
+    private $formData = CurrentModel::FIELDS;
 
     protected $module = 'articles';
     protected $model = CurrentModel::class;
@@ -75,14 +75,6 @@ class ArticlesController extends WebController
                 'element' => [
                     ['key' => 'is_active', 'label' => trans('nksoft::common.Status'), 'data' => $this->status(), 'type' => 'select'],
                     ['key' => 'categories_id', 'label' => trans('nksoft::common.article categories'), 'data' => $categories, 'type' => 'tree'],
-                    ['key' => 'meta_description', 'label' => trans('nksoft::common.Meta Description'), 'data' => null, 'type' => 'textarea'],
-                ],
-                'active' => true,
-            ],
-            [
-                'key' => 'inputForm',
-                'label' => trans('nksoft::common.Content'),
-                'element' => [
                     ['key' => 'name', 'label' => trans('nksoft::common.Name'), 'data' => null, 'class' => 'required', 'type' => 'text'],
                     ['key' => 'short_content', 'label' => trans('nksoft::common.Short Content'), 'data' => null, 'type' => 'editor'],
                     ['key' => 'description', 'label' => trans('nksoft::common.Description'), 'data' => null, 'type' => 'editor'],
@@ -90,6 +82,15 @@ class ArticlesController extends WebController
                     ['key' => 'slug', 'label' => trans('nksoft::common.Slug'), 'data' => null, 'type' => 'text'],
                     ['key' => 'banner', 'label' => trans('nksoft::common.Banner'), 'data' => null, 'type' => 'image'],
                     ['key' => 'images', 'label' => trans('nksoft::common.Images'), 'data' => null, 'type' => 'image'],
+                ],
+                'active' => true,
+            ],
+            [
+                'key' => 'inputForm',
+                'label' => 'SEO',
+                'element' => [
+                    ['key' => 'meta_title', 'label' => 'Title', 'data' => null, 'type' => 'text'],
+                    ['key' => 'meta_description', 'label' => trans('nksoft::common.Meta Description'), 'data' => null, 'type' => 'textarea'],
                 ],
             ],
         ];

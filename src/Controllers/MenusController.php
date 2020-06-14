@@ -208,6 +208,14 @@ class MenusController extends WebController
                 ],
                 'active' => true,
             ],
+            [
+                'key' => 'inputForm',
+                'label' => 'SEO',
+                'element' => [
+                    ['key' => 'meta_title', 'label' => 'Title', 'data' => null, 'type' => 'text'],
+                    ['key' => 'meta_description', 'label' => trans('nksoft::common.Meta Description'), 'data' => null, 'type' => 'textarea'],
+                ],
+            ],
         ];
     }
     public function position()

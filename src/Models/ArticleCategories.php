@@ -6,8 +6,9 @@ use Nksoft\Master\Models\NksoftModel;
 
 class ArticleCategories extends NksoftModel
 {
+    const FIELDS = ['id', 'name', 'is_active', 'order_by', 'parent_id', 'slug', 'description', 'page_template', 'meta_title', 'meta_description'];
     protected $table = 'article_categories';
-    protected $fillable = ['id', 'name', 'is_active', 'order_by', 'parent_id', 'slug', 'description', 'page_template', 'meta_description'];
+    protected $fillable = self::FIELDS;
 
     public function images()
     {

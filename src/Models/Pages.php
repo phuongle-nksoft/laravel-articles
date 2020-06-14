@@ -6,8 +6,9 @@ use Nksoft\Master\Models\NksoftModel;
 
 class Pages extends NksoftModel
 {
+    const FIELDS = ['id', 'name', 'is_active', 'order_by', 'slug', 'description', 'meta_title', 'meta_description'];
     protected $table = 'pages';
-    protected $fillable = ['id', 'name', 'is_active', 'order_by', 'slug', 'description', 'meta_description'];
+    protected $fillable = self::FIELDS;
 
     public function banners()
     {
