@@ -209,7 +209,7 @@ class MenusController extends WebController
                 'active' => true,
             ],
             [
-                'key' => 'inputForm',
+                'key' => 'SEO',
                 'label' => 'SEO',
                 'element' => [
                     ['key' => 'meta_title', 'label' => 'Title', 'data' => null, 'type' => 'text'],
