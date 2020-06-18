@@ -37,7 +37,7 @@ class BlocksController extends WebController
             } else {
                 $results = $results->whereNotIn('identify', ['promotion1', 'promotion2', 'promotion3', 'promotion4']);
             }
-            $results = $results->with(['histories'])->paginate();
+            $results = $results->with(['histories'])->orderBy('created_at', 'desc')->paginate();
             $listDelete = $this->getHistories($this->module)->pluck('parent_id');
             $response = [
                 'rows' => $results,

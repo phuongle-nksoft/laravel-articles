@@ -29,7 +29,7 @@ class ArticlesController extends WebController
                 ['key' => 'is_active', 'label' => trans('nksoft::common.Status'), 'data' => $this->status(), 'type' => 'select'],
             ];
             $select = Arr::pluck($columns, 'key');
-            $results = CurrentModel::select($select)->with(['histories'])->paginate();
+            $results = CurrentModel::select($select)->with(['histories'])->orderBy('created_at', 'desc')->paginate();
             $listDelete = $this->getHistories($this->module)->pluck('parent_id');
             $response = [
                 'rows' => $results,
@@ -89,6 +89,7 @@ class ArticlesController extends WebController
                 'key' => 'inputForm',
                 'label' => 'SEO',
                 'element' => [
+                    ['key' => 'canonical_link', 'label' => 'Canonical Link', 'data' => null, 'type' => 'text'],
                     ['key' => 'meta_title', 'label' => 'Title', 'data' => null, 'type' => 'text'],
                     ['key' => 'meta_description', 'label' => trans('nksoft::common.Meta Description'), 'data' => null, 'type' => 'textarea'],
                 ],
@@ -182,6 +183,7 @@ class ArticlesController extends WebController
                     ['link' => $result->category->slug, 'label' => $result->category->name],
                     ['link' => '#', 'label' => $result->name],
                 ],
+                'seo' => $this->SEO($result),
             ];
             return $this->responseViewSuccess($response);
         } catch (\Exception $e) {

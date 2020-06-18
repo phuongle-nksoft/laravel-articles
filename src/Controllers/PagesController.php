@@ -29,7 +29,7 @@ class PagesController extends WebController
                 ['key' => 'is_active', 'label' => trans('nksoft::common.Status'), 'data' => $this->status(), 'type' => 'select'],
             ];
             $select = Arr::pluck($columns, 'key');
-            $results = CurrentModel::select($select)->with(['histories'])->paginate();
+            $results = CurrentModel::select($select)->with(['histories'])->orderBy('created_at', 'desc')->paginate();
             $listDelete = $this->getHistories($this->module)->pluck('parent_id');
             $response = [
                 'rows' => $results,
@@ -94,6 +94,7 @@ class PagesController extends WebController
                 'key' => 'inputForm',
                 'label' => 'SEO',
                 'element' => [
+                    ['key' => 'canonical_link', 'label' => 'Canonical Link', 'data' => null, 'type' => 'text'],
                     ['key' => 'meta_title', 'label' => 'Title', 'data' => null, 'type' => 'text'],
                     ['key' => 'meta_description', 'label' => trans('nksoft::common.Meta Description'), 'data' => null, 'type' => 'textarea'],
                 ],
@@ -172,8 +173,6 @@ class PagesController extends WebController
             if (!$result) {
                 return $this->responseError('404');
             }
-            $image = $result->images()->first();
-            $im = $image ? 'storage/' . $image->image : 'wine/images/share/logo.svg';
             $response = [
                 'result' => $result,
                 'banner' => $result->images->first(),
@@ -184,13 +183,7 @@ class PagesController extends WebController
                     ['link' => '/', 'label' => \trans('nksoft::common.Home')],
                     ['active' => true, 'link' => '#', 'label' => $result->name],
                 ],
-                'seo' => [
-                    'title' => $result->name,
-                    'ogDescription' => $result->meta_description,
-                    'ogUrl' => url($result->slug),
-                    'ogImage' => url($im),
-                    'ogSiteName' => $result->name,
-                ],
+                'seo' => $this->SEO($result),
             ];
             return $this->responseViewSuccess($response);
         } catch (\Exception $e) {

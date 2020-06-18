@@ -5,7 +5,7 @@ use Nksoft\Master\Models\NksoftModel;
 
 class Menus extends NksoftModel
 {
-    const FIELDS = ['id', 'name', 'parent_id', 'is_active', 'order_by', 'slug', 'url_to', 'type', 'icon', 'layout', 'position', 'meta_description'];
+    const FIELDS = ['id', 'name', 'parent_id', 'is_active', 'order_by', 'slug', 'url_to', 'type', 'icon', 'layout', 'position', 'meta_description', 'canonical_link'];
     protected $table = 'menus';
     protected $fillable = self::FIELDS;
 

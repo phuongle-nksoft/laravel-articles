@@ -212,6 +212,7 @@ class MenusController extends WebController
                 'key' => 'SEO',
                 'label' => 'SEO',
                 'element' => [
+                    ['key' => 'canonical_link', 'label' => 'Canonical Link', 'data' => null, 'type' => 'text'],
                     ['key' => 'meta_title', 'label' => 'Title', 'data' => null, 'type' => 'text'],
                     ['key' => 'meta_description', 'label' => trans('nksoft::common.Meta Description'), 'data' => null, 'type' => 'textarea'],
                 ],
