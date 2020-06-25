@@ -188,7 +188,7 @@ class ArticleCategoriesController extends WebController
     public function show($id)
     {
         try {
-            $result = CurrentModel::select(['description', 'name', 'page_template', 'id'])->with(['images', 'childrens'])->find($id);
+            $result = CurrentModel::select($this->formData)->with(['images', 'childrens'])->find($id);
             $listIds = CurrentModel::GetListIds(['id' => $id]);
             if (!$result) {
                 return $this->responseError('404');

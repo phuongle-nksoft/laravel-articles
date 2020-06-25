@@ -168,7 +168,7 @@ class ArticlesController extends WebController
     public function show($id)
     {
         try {
-            $result = CurrentModel::select(['description', 'name', 'categories_id', 'id', 'created_at', 'slug'])->with(['images'])->find($id);
+            $result = CurrentModel::select($this->formData)->with(['images'])->find($id);
             if (!$result) {
                 return $this->responseError('404');
             }

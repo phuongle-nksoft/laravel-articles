@@ -169,7 +169,7 @@ class PagesController extends WebController
     public function show($id)
     {
         try {
-            $result = CurrentModel::select(['description', 'name', 'page_template', 'id'])->with(['images', 'banners'])->find($id);
+            $result = CurrentModel::select($this->formData)->with(['images', 'banners'])->find($id);
             if (!$result) {
                 return $this->responseError('404');
             }

@@ -26,6 +26,8 @@ class CreateMenusTable extends Migration
             $table->integer('position')->nullable()->default(1);
             $table->string('type')->nullable()->default('pages');
             $table->text('meta_description')->nullable();
+            $table->string('meta_title')->nullable();
+            $table->string('meta_canonical')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

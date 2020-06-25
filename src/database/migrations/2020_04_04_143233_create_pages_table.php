@@ -22,6 +22,8 @@ class CreatePagesTable extends Migration
             $table->string('page_template')->nullable();
             $table->longText('description')->nullable();
             $table->text('meta_description')->nullable();
+            $table->string('meta_title')->nullable();
+            $table->string('meta_canonical')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

@@ -24,6 +24,8 @@ class CreateArticlesTable extends Migration
             $table->longText('description')->nullable();
             $table->longText('short_content')->nullable();
             $table->text('meta_description')->nullable();
+            $table->string('meta_title')->nullable();
+            $table->string('meta_canonical')->nullable();
             $table->softDeletes();
             $table->timestamps();
             $table->foreign('categories_id', 'article_categories_categories_id_foreign')->references('id')->on('article_categories')->onDelete('cascade');
