@@ -24,9 +24,11 @@ class ArticlesController extends WebController
     {
         try {
             $columns = [
+                ['key' => 'order_by', 'label' => trans('nksoft::common.Order By')],
                 ['key' => 'id', 'label' => 'Id', 'type' => 'hidden'],
                 ['key' => 'name', 'label' => trans('nksoft::common.Name')],
                 ['key' => 'is_active', 'label' => trans('nksoft::common.Status'), 'data' => $this->status(), 'type' => 'select'],
+                ['key' => 'created_at', 'label' => 'Ngày Đăng'],
             ];
             $select = Arr::pluck($columns, 'key');
             $results = CurrentModel::select($select)->with(['histories'])->orderBy('created_at', 'desc')->paginate();
@@ -168,6 +170,7 @@ class ArticlesController extends WebController
     public function show($id)
     {
         try {
+            array_push($this->formData, 'created_at');
             $result = CurrentModel::select($this->formData)->with(['images'])->find($id);
             if (!$result) {
                 return $this->responseError('404');

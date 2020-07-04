@@ -12,6 +12,6 @@ class Pages extends NksoftModel
 
     public function banners()
     {
-        return $this->hasMany(Banners::class, 'pages_id')->where(['is_active' => 1])->with('images');
+        return $this->hasMany(Banners::class, 'pages_id')->where(['is_active' => 1])->orderBy('order_by', 'asc')->with('images');
     }
 }
