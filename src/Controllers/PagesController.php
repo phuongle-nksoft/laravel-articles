@@ -24,13 +24,13 @@ class PagesController extends WebController
     {
         try {
             $columns = [
-                ['key' => 'order_by', 'label' => trans('nksoft::common.Order By')],
+                ['key' => 'order_by', 'label' => 'STT', 'widthCol' => 80],
                 ['key' => 'id', 'label' => 'Id', 'type' => 'hidden'],
                 ['key' => 'name', 'label' => trans('nksoft::common.Name')],
                 ['key' => 'is_active', 'label' => trans('nksoft::common.Status'), 'data' => $this->status(), 'type' => 'select'],
             ];
             $select = Arr::pluck($columns, 'key');
-            $results = CurrentModel::select($select)->with(['histories'])->orderBy('created_at', 'desc')->paginate();
+            $results = CurrentModel::select($select)->with(['histories'])->orderBy('created_at', 'desc')->get();
             $listDelete = $this->getHistories($this->module)->pluck('parent_id');
             $response = [
                 'rows' => $results,
