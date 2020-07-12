@@ -164,14 +164,7 @@ class ArticleCategoriesController extends WebController
             $data['slug'] = $this->getSlug($data);
             $result = CurrentModel::create($data);
             $this->setUrlRedirects($result);
-            if ($request->hasFile('images')) {
-                $images = $request->file('images');
-                $this->setMedia($images, $result->id, $this->module);
-            }
-            if ($request->hasFile('banner')) {
-                $images = $request->file('banner');
-                $this->setMedia($images, $result->id, $this->module, 2);
-            }
+            $this->media($request, $result);
             $response = [
                 'result' => $result,
             ];
@@ -271,14 +264,7 @@ class ArticleCategoriesController extends WebController
             }
             $result->save();
             $this->setUrlRedirects($result);
-            if ($request->hasFile('images')) {
-                $images = $request->file('images');
-                $this->setMedia($images, $result->id, $this->module);
-            }
-            if ($request->hasFile('banner')) {
-                $images = $request->file('banner');
-                $this->setMedia($images, $result->id, $this->module, 2);
-            }
+            $this->media($request, $result);
             $response = [
                 'result' => $result,
             ];

@@ -130,10 +130,7 @@ class BannersController extends WebController
             $data['slug'] = $this->getSlug($data);
             $result = CurrentModel::create($data);
             $this->setUrlRedirects($result);
-            if ($request->hasFile('images')) {
-                $images = $request->file('images');
-                $this->setMedia($images, $result->id, $this->module);
-            }
+            $this->media($request, $result);
             $response = [
                 'result' => $result,
             ];
@@ -210,10 +207,7 @@ class BannersController extends WebController
             }
             $result->save();
             $this->setUrlRedirects($result);
-            if ($request->hasFile('images')) {
-                $images = $request->file('images');
-                $this->setMedia($images, $result->id, $this->module);
-            }
+            $this->media($request, $result);
             $response = [
                 'result' => $result,
             ];

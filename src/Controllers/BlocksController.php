@@ -147,14 +147,7 @@ class BlocksController extends WebController
 
             $result = CurrentModel::create($data);
             $this->setUrlRedirects($result);
-            if ($request->hasFile('images')) {
-                $images = $request->file('images');
-                $this->setMedia($images, $result->id, $this->module);
-            }
-            if ($request->hasFile('banner')) {
-                $images = $request->file('banner');
-                $this->setMedia($images, $result->id, $this->module, true);
-            }
+            $this->media($request, $result);
             $response = [
                 'result' => $result,
             ];
@@ -236,14 +229,7 @@ class BlocksController extends WebController
             }
             $result->save();
             $this->setUrlRedirects($result);
-            if ($request->hasFile('images')) {
-                $images = $request->file('images');
-                $this->setMedia($images, $result->id, $this->module);
-            }
-            if ($request->hasFile('banner')) {
-                $images = $request->file('banner');
-                $this->setMedia($images, $result->id, $this->module, true);
-            }
+            $this->media($request, $result);
             $response = [
                 'result' => $result,
             ];
