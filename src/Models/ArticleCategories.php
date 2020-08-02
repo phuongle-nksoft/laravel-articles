@@ -28,10 +28,10 @@ class ArticleCategories extends NksoftModel
     /**
      * Get list category with recursive
      */
-    public static function GetListCategories($where, $result)
+    public static function GetListCategories($where, $result = null)
     {
-        $parentId = $result->parent_id ?? 0;
-        $id = $result->id ?? 0;
+        $parentId = $result ? $result->parent_id : 0;
+        $id = $result ? $result->id : 0;
         $data = array();
         $fs = self::where($where)->where('id', '<>', $id)->orderBy('order_by')->get();
         if ($fs) {
@@ -56,10 +56,10 @@ class ArticleCategories extends NksoftModel
     /**
      * Get list category to product
      */
-    public static function GetListByArticle($where, $result)
+    public static function GetListByArticle($where, $result = null)
     {
         $type = 'article-categories';
-        $parentId = $result->categories_id ?? 0;
+        $parentId = $result ? $result->categories_id : 0;
         $data = array();
         $fs = self::where($where)->orderBy('order_by')->get();
         if ($fs) {

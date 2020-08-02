@@ -27,11 +27,12 @@ class ArticlesController extends WebController
                 ['key' => 'order_by', 'label' => 'STT', 'widthCol' => 80],
                 ['key' => 'id', 'label' => 'Id', 'type' => 'hidden'],
                 ['key' => 'name', 'label' => trans('nksoft::common.Name')],
+                ['key' => 'categories_id', 'label' => trans('nksoft::common.article categories'), 'data' => ArticleCategories::GetListByArticle(array('parent_id' => 0)), 'type' => 'select', 'relationship' => 'category'],
                 ['key' => 'is_active', 'label' => trans('nksoft::common.Status'), 'data' => $this->status(), 'type' => 'select'],
                 ['key' => 'created_at', 'label' => 'Ngày Đăng', 'formatter' => 'date'],
             ];
             $select = Arr::pluck($columns, 'key');
-            $results = CurrentModel::select($select)->with(['histories'])->orderBy('created_at', 'desc')->get();
+            $results = CurrentModel::select($select)->with(['histories', 'category'])->orderBy('created_at', 'desc')->get();
             $listDelete = $this->getHistories($this->module)->pluck('parent_id');
             $response = [
                 'rows' => $results,
